@@ -1,14 +1,10 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
 
-```{r prepare_data, echo=TRUE}
+
+```r
 myfile <- read.csv(unz("activity.zip", "activity.csv"), header = TRUE, 
                    stringsAsFactors = FALSE)
 myfile$date <- as.Date(myfile$date)
@@ -16,7 +12,8 @@ myfile$date <- as.Date(myfile$date)
 
 ## What is mean total number of steps taken per day?
 
-```{r mean_total_steps, echo = TRUE, results = "hide", message=FALSE}
+
+```r
 library(dplyr)
 options(digits = 2, scipen = 3)
 gdate <- group_by(myfile, date)
@@ -31,13 +28,14 @@ Here is a histogram of the total number of steps taken per day:
 
 ![Total Number of Steps Taken Per Day](figure/1.png)
 
-The mean total number of steps taken per day is **`r mean_steps`**.
+The mean total number of steps taken per day is **10766.19**.
 
-The median total number of steps taken per day is **`r median_steps`**.
+The median total number of steps taken per day is **10765**.
 
 ## What is the average daily activity pattern?
 
-```{r average_daily_activity_pattern, results = "hide"}
+
+```r
 ginterval <- group_by(myfile, interval)
 msteps <- summarise(ginterval, steps = mean(steps, na.rm = T))
 png("figure/2.png")
@@ -50,21 +48,10 @@ Here is a time series plot of the 5-minute interval and the average number of st
 
 ![average daily activity pattern](figure/2.png)
 
-The 5-minute interval of **`r maxinterval$interval`** contains the maximum number of steps, which is **`r maxinterval$steps`**.
+The 5-minute interval of **835** contains the maximum number of steps, which is **206.17**
 
 ## Imputing missing values
 
-```{r missing_values, results = "hide", cache = TRUE}
-bool_nas <- is.na(myfile[, 1])
 
-new_file <- myfile
-num_rows <- nrow(myfile)
-for (i in 1:num_rows) {
-  if (bool_nas[i]) {
-    tmp <- filter(msteps, interval == new_file[i, 3])
-    new_file[i, 1] <- tmp$steps
-  }
-}
-```
 
 ## Are there differences in activity patterns between weekdays and weekends?
